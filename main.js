@@ -210,6 +210,7 @@ function createMovieCard(index, title, otitle, poster_path, vote_average, overvi
     return movieContainer;
 }
 
+//
 
 
 //-----카테고리별 카드 생성-----
@@ -223,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
             lcContainer.innerHTML = '';
             let genreId = getGenreId(button.id);
             fetchMoviesByGenre(genreId);
+            cateMenu.classList.remove('active');
         });
     });
 
