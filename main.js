@@ -268,7 +268,13 @@ function handleSearch() {
 
     fetch(searchUrl, options)
         .then(response => response.json())
-        .then(data => renderMovies(data.results))
+        .then(data => {
+            if (data.results.length > 0) {
+                renderMovies(data.results);
+            } else {
+                alert('검색 결과가 없습니다.');
+            }
+        })
         .catch(err => console.error(err));
 }
 
