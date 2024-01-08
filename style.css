@@ -20,7 +20,8 @@
 .cate_menu,
 .exBtn,
 .seemore,
-.live {
+.live,
+.movieadd {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -111,6 +112,7 @@ a {
 .cate_menu button:hover {
     color: white;
     background-color: black;
+    transition: 0.5s;
 }
 
 .cate {
@@ -442,4 +444,23 @@ a {
     font-size: 20px;
     text-align-last: right;
     font-weight: bold;
+}
+
+.searchadd {
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 30px;
+    background-color: transparent;
+    
+    padding: 15px 25px 15px 25px;
+    margin: 50px 0 50px 45%;
+
+    display: block;
+}
+
+.searchadd:hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
 }

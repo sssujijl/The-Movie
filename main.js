@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', () => searchInput.focus());
+
 // -----exbtn, closebtn 클릭 시 main, more 보여주기 -----
 function toggleDisplay(mainElement, moreElement) {
     mainElement.style.display = (mainElement.style.display === 'none') ? 'block' : 'none';
@@ -140,17 +142,28 @@ for (let i = 1; i <= divCount; i++) {
 
 // -----live에 카드 생성-----
 
-fetch('https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=1', options)
-    .then(response => response.json())
-    .then(data => {
-        const lcContainer = document.getElementById('live');
+const lcContainer = document.getElementById('live');
+let currentPage = 0;
+let any = 0;
 
-        data.results.forEach((movie, index) => {
-            const movieCard = createMovieCard(index, movie.title, movie.original_title, movie.poster_path, movie.vote_average, movie.overview, movie.id);
-            lcContainer.appendChild(movieCard);
-        });
-    })
-    .catch(err => console.error(err));
+function fetchMoreMovies() {
+    const url = `https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=${currentPage + 1}`;
+
+    fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+            data.results.forEach((movie, index) => {
+                const movieCard = createMovieCard(index, movie.title, movie.original_title, movie.poster_path, movie.vote_average, movie.overview, movie.id);
+                lcContainer.appendChild(movieCard);
+            });
+
+            currentPage += 1;
+            any = 1;
+        })
+        .catch(err => { console.error(err); any = 1; });
+}
+
+document.addEventListener('DOMContentLoaded', fetchMoreMovies);
 
 function createMovieCard(index, title, otitle, poster_path, vote_average, overview, id) {
     const movieContainer = document.createElement('div');
@@ -202,11 +215,13 @@ function createMovieCard(index, title, otitle, poster_path, vote_average, overvi
 //-----카테고리별 카드 생성-----
 
 document.addEventListener('DOMContentLoaded', function () {
-    var genreButtons = document.querySelectorAll('.cate_menu button');
+    let genreButtons = document.querySelectorAll('.cate_menu button');
+    let selectedGenreId = null;
 
     genreButtons.forEach(function (button) {
         button.addEventListener('click', function () {
-            var genreId = getGenreId(button.id);
+            lcContainer.innerHTML = '';
+            let genreId = getGenreId(button.id);
             fetchMoviesByGenre(genreId);
         });
     });
@@ -231,62 +246,82 @@ document.addEventListener('DOMContentLoaded', function () {
                 return 14;
             case 'horror':
                 return 27;
-
             default:
                 return null;
         }
     }
 
     function fetchMoviesByGenre(genreId) {
-        const discoverUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=ko-KR&page=1&sort_by=popularity.desc&with_genres=${genreId}`;
+        selectedGenreId = genreId;
+        const discoverUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=ko-KR&page=${currentPage+1}&sort_by=popularity.desc&with_genres=${genreId}`;
 
         fetch(discoverUrl, options)
             .then(response => response.json())
-            .then(data => renderMovies(data.results))
-            .catch(err => console.error(err));
+            .then(data => { renderMovies(data.results); any = 3; })
+            .catch(err => { console.error(err); any = 3; });
     }
 });
+
 
 
 
 //-----검색 카드 생성-----
 
 const searchBtn = document.getElementById('searchBtn');
-searchBtn.addEventListener('click', handleSearch);
+searchBtn.addEventListener('click', function () {
+    lcContainer.innerHTML = '';
+    handleSearch();
+});
 
 const searchInput = document.getElementById('searchInput');
 searchInput.addEventListener('keyup', function (event) {
     if (event.key === 'Enter') {
+        lcContainer.innerHTML = '';
         handleSearch();
     }
 });
 
 function handleSearch() {
     const query = searchInput.value;
-    const searchUrl = `https://api.themoviedb.org/3/search/movie?language=ko-KR&page=1&query=${encodeURIComponent(query.toLowerCase())}`;
+    const searchUrl = `https://api.themoviedb.org/3/search/movie?language=ko-KR&page=${currentPage + 1}&query=${encodeURIComponent(query.toLowerCase())}`;
 
     fetch(searchUrl, options)
         .then(response => response.json())
         .then(data => {
             if (data.results.length > 0) {
                 renderMovies(data.results);
+                any = 2;
             } else {
                 alert('검색 결과가 없습니다.');
             }
         })
-        .catch(err => console.error(err));
+        .catch(err => { console.error(err); any = 2; });
 }
 
 function renderMovies(movies) {
     const lcContainer = document.getElementById('live');
-    lcContainer.innerHTML = '';
+    // lcContainer.innerHTML = '';
 
-    movies.map((movie, index) => {
+    movies.forEach((movie, index) => {
         const movieCard = createMovieCard(index + 1, movie.title, movie.original_title, movie.poster_path, movie.vote_average, movie.overview, movie.id);
         lcContainer.appendChild(movieCard);
     });
+
+    currentPage += 1;
+
 }
 
 
 
-document.addEventListener('DOMContentLoaded', () => searchInput.focus());
+//-----영화 더 보기-----
+const movieadd = document.getElementById('movieadd');
+movieadd.addEventListener('click', function () {
+    if (any === 1) {
+        fetchMoreMovies();
+    } else if (any === 2) {
+        handleSearch();
+    } else if (any === 3) {
+        fetchMoviesByGenre(selectedGenreId);
+    }
+});
+
