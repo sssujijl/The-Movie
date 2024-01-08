@@ -328,6 +328,8 @@ a {
 
 .final {
     overflow: hidden;
+    position: relative;
+    max-height: 850px;
 }
 
 /* -----버튼들----- */
@@ -335,7 +337,7 @@ a {
 .mainbutton {
     position: absolute;
     left: 40%;
-    bottom: 1%;
+    bottom: 5%;
     z-index: 1000;
 }
 
@@ -357,7 +359,7 @@ a {
 
 .slidebutton {
     position: absolute;
-    top: 450px;
+    top: 350px;
     background-color: transparent;
 
     display: flex;
