@@ -138,7 +138,6 @@ for (let i = 1; i <= divCount; i++) {
 
 
 
-
 // -----live에 카드 생성-----
 
 fetch('https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=1', options)
@@ -282,7 +281,7 @@ function renderMovies(movies) {
     const lcContainer = document.getElementById('live');
     lcContainer.innerHTML = '';
 
-    movies.forEach((movie, index) => {
+    movies.map((movie, index) => {
         const movieCard = createMovieCard(index + 1, movie.title, movie.original_title, movie.poster_path, movie.vote_average, movie.overview, movie.id);
         lcContainer.appendChild(movieCard);
     });
