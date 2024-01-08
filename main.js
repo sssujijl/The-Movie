@@ -264,7 +264,7 @@ searchInput.addEventListener('keyup', function (event) {
 
 function handleSearch() {
     const query = searchInput.value;
-    const searchUrl = `https://api.themoviedb.org/3/search/movie?language=ko-KR&page=1&query=${encodeURIComponent(query)}`;
+    const searchUrl = `https://api.themoviedb.org/3/search/movie?language=ko-KR&page=1&query=${encodeURIComponent(query.toLowerCase())}`;
 
     fetch(searchUrl, options)
         .then(response => response.json())
@@ -287,4 +287,3 @@ function renderMovies(movies) {
         lcContainer.appendChild(movieCard);
     });
 }
-
