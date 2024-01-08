@@ -286,3 +286,7 @@ function renderMovies(movies) {
         lcContainer.appendChild(movieCard);
     });
 }
+
+
+
+document.addEventListener('DOMContentLoaded', () => searchInput.focus());
