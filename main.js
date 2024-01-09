@@ -141,7 +141,7 @@ for (let i = 1; i <= divCount; i++) {
 
 const lcContainer = document.getElementById('live');
 let currentPage = 0;
-let any = 0;
+let functionSelection = 0;
 
 function fetchMoreMovies() {
     const url = `https://api.themoviedb.org/3/movie/popular?language=ko-KR&page=${currentPage + 1}`;
@@ -155,7 +155,7 @@ function fetchMoreMovies() {
             });
 
             currentPage += 1;
-            any = 1;
+            functionSelection = 1;
         })
         .catch(err => { console.error(err); any = 1; });
 }
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(discoverUrl, options)
             .then(response => response.json())
             .then(data => { renderMovies(data.results); any = 3;})
-            .catch(err => { console.error(err); any = 3; });
+            .catch(err => { console.error(err); functionSelection = 3; });
     }
 });
 
@@ -270,7 +270,7 @@ function handleSearch() {
         .then(data => {
             if (data.results.length > 0) {
                 renderMovies(data.results);
-                any = 2;
+                functionSelection = 2;
             } else {
                 alert('검색 결과가 없습니다.');
             }
@@ -293,11 +293,11 @@ function renderMovies(movies) {
 //-----영화 더 보기-----
 const movieadd = document.getElementById('movieadd');
 movieadd.addEventListener('click', function () {
-    if (any === 1) {
+    if (functionSelection === 1) {
         fetchMoreMovies();
-    } else if (any === 2) {
+    } else if (functionSelection === 2) {
         handleSearch();
-    } else if (any === 3) {
+    } else if (functionSelection === 3) {
         fetchMoviesByGenre(selectedGenreId);
     }
 });
