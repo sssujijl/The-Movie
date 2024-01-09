@@ -6,19 +6,23 @@ function toggleDisplay(mainElement, moreElement) {
     moreElement.style.display = (moreElement.style.display === 'block') ? 'none' : 'block';
 }
 
+function setupToggleButton(buttonType, index) {
+    const btn = document.getElementById(`${buttonType}${index}`);
+    const main = document.getElementById(`main${index}`);
+    const more = document.getElementById(`more${index}`);
+
+    btn.addEventListener('click', function () {
+        if (buttonType === 'exBtn') {
+            toggleDisplay(main, more);
+        } else if (buttonType === 'close') {
+            toggleDisplay(more, main);
+        }
+    });
+}
+
 for (let i = 1; i <= 5; i++) {
-    const exBtn = document.getElementById(`exBtn${i}`);
-    const closeBtn = document.getElementById(`close${i}`);
-    const main = document.getElementById(`main${i}`);
-    const more = document.getElementById(`more${i}`);
-
-    exBtn.addEventListener('click', function () {
-        toggleDisplay(main, more);
-    });
-
-    closeBtn.addEventListener('click', function () {
-        toggleDisplay(more, main);
-    });
+    setupToggleButton('exBtn', i);
+    setupToggleButton('close', i);
 }
 
 
