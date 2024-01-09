@@ -159,31 +159,15 @@ function fetchMoreMovies() {
 document.addEventListener('DOMContentLoaded', fetchMoreMovies);
 
 function createMovieCard(index, title, otitle, poster_path, vote_average, overview, id) {
-    const movieContainer = document.createElement('div');
-    const imageElement = document.createElement('img');
-    const plusContainer = document.createElement('div');
-    const titleElement = document.createElement('div');
-    const otitleElement = document.createElement('div');
-    const starElement = document.createElement('div');
+
+    const movieContainer = (() => { const el = document.createElement('div'); el.className = 'lc'; return el; })();
+    const imageElement = (() => { const el = document.createElement('img'); el.className = 'poster'; el.src = 'https://image.tmdb.org/t/p/original' + poster_path; return el; })();
+    const plusContainer = (() => { const el = document.createElement('div'); el.className = 'plus'; return el; })();
+    const titleElement = (() => { const el = document.createElement('div'); el.className = 'p_title'; el.textContent = title; return el; })();
+    const otitleElement = (() => { const el = document.createElement('div'); el.className = 'p-otitle'; el.textContent = `(${otitle})`; return el; })();
+    const starElement = (() => { const el = document.createElement('div'); el.className = 'p_star'; el.textContent = `⭐️ 평점: ${Math.round(vote_average * 10) / 10}`; return el; })();
     const hrElement = document.createElement('hr');
-    const overviewElement = document.createElement('div');
-
-    movieContainer.className = 'lc';
-    imageElement.className = 'poster';
-    plusContainer.className = 'plus';
-    titleElement.className = 'p_title';
-    otitleElement.className = 'p-otitle';
-    starElement.className = 'p_star';
-    overviewElement.className = 'p_over';
-    
-    let round = Math.round(vote_average * 10) / 10;
-
-    imageElement.src = 'https://image.tmdb.org/t/p/original' + poster_path;
-
-    titleElement.textContent = title;
-    otitleElement.textContent = `(${otitle})`;
-    starElement.textContent = `⭐️ 평점 : ${round}`;
-    overviewElement.textContent = overview;
+    const overviewElement = (() => { const el = document.createElement('div'); el.className = 'p_over'; el.textContent = overview; return el; })();
 
     plusContainer.appendChild(titleElement);
     plusContainer.appendChild(otitleElement);
