@@ -31,30 +31,30 @@ for (let i = 1; i <= divCount; i++) {
     const moreDivId = `more${i}`;
 
     fetch('https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1', options)
-    .then(response => response.json())
-    .then(data => {
-        const randomIndex = getRandomIndex(data);
-        const movieData = data.results[randomIndex];
+        .then(response => response.json())
+        .then(data => {
+            const randomIndex = getRandomIndex(data);
+            const movieData = data.results[randomIndex];
 
-        const imageElement = document.createElement("img");
-        imageElement.src = 'https://image.tmdb.org/t/p/original' + movieData.backdrop_path;
+            const imageElement = document.createElement("img");
+            imageElement.src = 'https://image.tmdb.org/t/p/original' + movieData.backdrop_path;
 
-        const moreInfoDiv = document.getElementById(moreDivId);
+            const moreInfoDiv = document.getElementById(moreDivId);
 
-        moreInfoDiv.querySelector(".title").textContent = movieData.title;
-        moreInfoDiv.querySelector(".original_title").textContent = movieData.original_title;
-        moreInfoDiv.querySelector(".release_date").textContent = `개봉 날짜: ${movieData.release_date}`;
-        moreInfoDiv.querySelector(".vote_average").textContent = `⭐️ 평점: ${Math.round(movieData.vote_average * 10) / 10}`;
-        moreInfoDiv.querySelector(".overview").textContent = movieData.overview;
+            moreInfoDiv.querySelector(".title").textContent = movieData.title;
+            moreInfoDiv.querySelector(".original_title").textContent = movieData.original_title;
+            moreInfoDiv.querySelector(".release_date").textContent = `개봉 날짜: ${movieData.release_date}`;
+            moreInfoDiv.querySelector(".vote_average").textContent = `⭐️ 평점: ${Math.round(movieData.vote_average * 10) / 10}`;
+            moreInfoDiv.querySelector(".overview").textContent = movieData.overview;
 
-        const mainDiv = document.getElementById(mainDivId);
-        mainDiv.appendChild(imageElement);
+            const mainDiv = document.getElementById(mainDivId);
+            mainDiv.appendChild(imageElement);
 
-        const posterElement = document.createElement("img");
-        posterElement.src = 'https://image.tmdb.org/t/p/original' + movieData.poster_path;
-        moreInfoDiv.querySelector(".poster_path").appendChild(posterElement);
-    })
-    .catch(err => console.error(err));
+            const posterElement = document.createElement("img");
+            posterElement.src = 'https://image.tmdb.org/t/p/original' + movieData.poster_path;
+            moreInfoDiv.querySelector(".poster_path").appendChild(posterElement);
+        })
+        .catch(err => console.error(err));
 
 }
 
@@ -96,11 +96,8 @@ function createMovieCard(index, title, otitle, poster_path, vote_average, overvi
     const hrElement = document.createElement('hr');
     const overviewElement = (() => { const el = document.createElement('div'); el.className = 'p_over'; el.textContent = overview; return el; })();
 
-    plusContainer.appendChild(titleElement);
-    plusContainer.appendChild(otitleElement);
-    plusContainer.appendChild(starElement);
-    plusContainer.appendChild(hrElement);
-    plusContainer.appendChild(overviewElement);
+    const elements = [titleElement, otitleElement, starElement, hrElement, overviewElement];
+    elements.forEach(element => plusContainer.appendChild(element));
 
     movieContainer.appendChild(imageElement);
     movieContainer.appendChild(plusContainer);
@@ -161,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(discoverUrl, options)
             .then(response => response.json())
-            .then(data => { renderMovies(data.results); any = 3;})
+            .then(data => { renderMovies(data.results); any = 3; })
             .catch(err => { console.error(err); functionSelection = 3; });
     }
 });
