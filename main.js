@@ -104,38 +104,31 @@ for (let i = 1; i <= divCount; i++) {
     const moreDivId = `more${i}`;
 
     fetch('https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1', options)
-        .then(response => response.json())
-        .then(data => {
-            const randomIndex = getRandomIndex(data);
-            const movieData = data.results[randomIndex];
+    .then(response => response.json())
+    .then(data => {
+        const randomIndex = getRandomIndex(data);
+        const movieData = data.results[randomIndex];
 
-            const imageElement = document.createElement("img");
-            imageElement.src = 'https://image.tmdb.org/t/p/original' + movieData.backdrop_path;
+        const imageElement = document.createElement("img");
+        imageElement.src = 'https://image.tmdb.org/t/p/original' + movieData.backdrop_path;
 
-            const moreInfoDiv = document.getElementById(moreDivId);
-            const titleElement = moreInfoDiv.querySelector(".title");
-            const originalTitleElement = moreInfoDiv.querySelector(".original_title");
-            const releaseDateElement = moreInfoDiv.querySelector(".release_date");
-            const voteAverageElement = moreInfoDiv.querySelector(".vote_average");
-            const overviewElement = moreInfoDiv.querySelector(".overview");
-            const posterPathElement = moreInfoDiv.querySelector(".poster_path");
+        const moreInfoDiv = document.getElementById(moreDivId);
 
-            let mathround = Math.round(movieData.vote_average * 10) / 10;
+        moreInfoDiv.querySelector(".title").textContent = movieData.title;
+        moreInfoDiv.querySelector(".original_title").textContent = movieData.original_title;
+        moreInfoDiv.querySelector(".release_date").textContent = `개봉 날짜: ${movieData.release_date}`;
+        moreInfoDiv.querySelector(".vote_average").textContent = `⭐️ 평점: ${Math.round(movieData.vote_average * 10) / 10}`;
+        moreInfoDiv.querySelector(".overview").textContent = movieData.overview;
 
-            titleElement.textContent = movieData.title;
-            originalTitleElement.textContent = movieData.original_title;
-            releaseDateElement.textContent = `개봉 날짜: ${movieData.release_date}`;
-            voteAverageElement.textContent = `⭐️ 평점: ${mathround}`;
-            overviewElement.textContent = movieData.overview;
+        const mainDiv = document.getElementById(mainDivId);
+        mainDiv.appendChild(imageElement);
 
-            const mainDiv = document.getElementById(mainDivId);
-            mainDiv.appendChild(imageElement);
+        const posterElement = document.createElement("img");
+        posterElement.src = 'https://image.tmdb.org/t/p/original' + movieData.poster_path;
+        moreInfoDiv.querySelector(".poster_path").appendChild(posterElement);
+    })
+    .catch(err => console.error(err));
 
-            const posterElement = document.createElement("img");
-            posterElement.src = 'https://image.tmdb.org/t/p/original' + movieData.poster_path;
-            posterPathElement.appendChild(posterElement);
-        })
-        .catch(err => console.error(err));
 }
 
 
@@ -182,7 +175,7 @@ function createMovieCard(index, title, otitle, poster_path, vote_average, overvi
     otitleElement.className = 'p-otitle';
     starElement.className = 'p_star';
     overviewElement.className = 'p_over';
-
+    
     let round = Math.round(vote_average * 10) / 10;
 
     imageElement.src = 'https://image.tmdb.org/t/p/original' + poster_path;
@@ -210,14 +203,12 @@ function createMovieCard(index, title, otitle, poster_path, vote_average, overvi
     return movieContainer;
 }
 
-//
 
 
 //-----카테고리별 카드 생성-----
 
 document.addEventListener('DOMContentLoaded', function () {
     let genreButtons = document.querySelectorAll('.cate_menu button');
-    let selectedGenreId = null;
 
     genreButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -253,17 +244,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
     function fetchMoviesByGenre(genreId) {
-        selectedGenreId = genreId;
-        const discoverUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=ko-KR&page=${currentPage+1}&sort_by=popularity.desc&with_genres=${genreId}`;
+        const discoverUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=ko-KR&page=${currentPage + 1}&sort_by=popularity.desc&with_genres=${genreId}`;
 
         fetch(discoverUrl, options)
             .then(response => response.json())
-            .then(data => { renderMovies(data.results); any = 3; })
+            .then(data => { renderMovies(data.results); any = 3;})
             .catch(err => { console.error(err); any = 3; });
     }
 });
-
 
 
 
@@ -301,9 +291,6 @@ function handleSearch() {
 }
 
 function renderMovies(movies) {
-    const lcContainer = document.getElementById('live');
-    // lcContainer.innerHTML = '';
-
     movies.forEach((movie, index) => {
         const movieCard = createMovieCard(index + 1, movie.title, movie.original_title, movie.poster_path, movie.vote_average, movie.overview, movie.id);
         lcContainer.appendChild(movieCard);
@@ -326,4 +313,3 @@ movieadd.addEventListener('click', function () {
         fetchMoviesByGenre(selectedGenreId);
     }
 });
-
