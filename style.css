@@ -86,6 +86,7 @@ a {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 10px;
+    transition: transform 0.5s ease, opacity 0.5s ease;
 
 }
 
@@ -107,7 +108,6 @@ a {
     opacity: 1;
     transform: translateY(0);
 }
-
 
 .cate_menu button:hover {
     color: white;
